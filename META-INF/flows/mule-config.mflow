@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="mule-config">
+    <global-element name="Property Placeholder" type="http://www.springframework.org/schema/context/property-placeholder" entity-id="Property Placeholder#1">
+        <properties>
+            <property name="properties-ref"/>
+            <property name="order" value="2"/>
+            <property name="location" value="classpath:config.properties"/>
+            <property name="local-override"/>
+            <property name="system-properties-mode"/>
+            <property name="file-encoding"/>
+            <property name="auxiliary;index" value="1"/>
+            <property name="ignore-unresolvable"/>
+            <property name="ignore-resource-not-found"/>
+        </properties>
+    </global-element>
+    <global-element name="Property Placeholder" type="http://www.springframework.org/schema/context/property-placeholder" entity-id="Property Placeholder#2">
+        <properties>
+            <property name="properties-ref"/>
+            <property name="order" value="1"/>
+            <property name="location" value="classpath:config-override.properties"/>
+            <property name="local-override"/>
+            <property name="system-properties-mode"/>
+            <property name="file-encoding"/>
+            <property name="auxiliary;index" value="2"/>
+            <property name="ignore-unresolvable" value="true"/>
+            <property name="ignore-resource-not-found" value="true"/>
+        </properties>
+    </global-element>
+    <global-element name="Quartz" type="http://www.mulesoft.org/schema/mule/quartz/connector" entity-id="Quartz#1">
+        <properties>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="name" value="QuartzConnector"/>
+            <property name="validateConnections"/>
+            <property name="dynamicNotification"/>
+            <property name="auxiliary;index" value="3"/>
+            <property name="scheduler-ref"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;0">
+                <property name="value" value="MuleScheduler1"/>
+                <property name="key" value="org.quartz.scheduler.instanceName"/>
+                <property name="auxiliary;index" value="4"/>
+                <property name="auxiliary;wrapIn" value="4"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;1">
+                <property name="value" value="org.quartz.simpl.SimpleThreadPool"/>
+                <property name="key" value="org.quartz.threadPool.class"/>
+                <property name="auxiliary;index" value="5"/>
+                <property name="auxiliary;wrapIn" value="5"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;2">
+                <property name="value" value="3"/>
+                <property name="key" value="org.quartz.threadPool.threadCount"/>
+                <property name="auxiliary;index" value="6"/>
+                <property name="auxiliary;wrapIn" value="6"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;3">
+                <property name="value" value="false"/>
+                <property name="key" value="org.quartz.scheduler.rmi.proxy"/>
+                <property name="auxiliary;index" value="7"/>
+                <property name="auxiliary;wrapIn" value="7"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;4">
+                <property name="value" value="false"/>
+                <property name="key" value="org.quartz.scheduler.rmi.export"/>
+                <property name="auxiliary;index" value="8"/>
+                <property name="auxiliary;wrapIn" value="8"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;5">
+                <property name="value" value="org.quartz.simpl.RAMJobStore"/>
+                <property name="key" value="org.quartz.jobStore.class"/>
+                <property name="auxiliary;index" value="9"/>
+                <property name="auxiliary;wrapIn" value="9"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="HTTP\HTTPS" type="org.mule.tooling.ui.modules.core.global.httpsConnector" entity-id="HTTP\HTTPS#1">
+        <properties>
+            <property name="proxyUsername"/>
+            <property name="reuseAddress"/>
+            <property name="receiveBacklog" value="0"/>
+            <property name="enableCookies"/>
+            <property name="serverSoTimeout" value="10000"/>
+            <property name="socketSoLinger" value="0"/>
+            <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/https/connector"/>
+            <property name="clientSoTimeout" value="10000"/>
+            <property name="validateConnections" value="true"/>
+            <property name="keepAlive"/>
+            <property name="sendTcpNoDelay"/>
+            <property name="label"/>
+            <property name="proxyPort"/>
+            <property name="cookieSpec"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="proxyHostname"/>
+            <property name="receiveBufferSize" value="0"/>
+            <property name="name" value="HttpsConnector"/>
+            <property name="keepSendSocketOpen"/>
+            <property name="dynamicNotification"/>
+            <property name="sendBufferSize" value="0"/>
+            <property name="ENABLE_MODE_SWITCH"/>
+            <property name="proxyPassword"/>
+            <property name="auxiliary;index" value="10"/>
+        </properties>
+    </global-element>
+    <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#1">
+        <properties>
+            <property name="factory-bean"/>
+            <property name="abstract"/>
+            <property name="scope"/>
+            <property name="init-method"/>
+            <property name="autowire-candidate"/>
+            <property name="factory-method"/>
+            <property name="class" value="org.apache.commons.dbcp.BasicDataSource"/>
+            <property name="parent"/>
+            <property name="children"/>
+            <property name="lazy-init"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
+            <property name="id" value="DAX_Data_Source"/>
+            <property name="primary"/>
+            <property name="name"/>
+            <property name="autowire"/>
+            <property name="destroy-method" value="close"/>
+            <property name="auxiliary;index" value="12"/>
+            <property name="auxiliary;wrapIn" value="11"/>
+            <property name="depends-on"/>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;0">
+                <property name="name" value="driverClassName"/>
+                <property name="value" value="${dax.database.driver}"/>
+                <property name="auxiliary;index" value="13"/>
+                <property name="auxiliary;wrapIn" value="13"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;1">
+                <property name="name" value="url"/>
+                <property name="value" value="${dax.database.url}"/>
+                <property name="auxiliary;index" value="14"/>
+                <property name="auxiliary;wrapIn" value="14"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;2">
+                <property name="name" value="username"/>
+                <property name="value" value="${dax.database.user}"/>
+                <property name="auxiliary;index" value="15"/>
+                <property name="auxiliary;wrapIn" value="15"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;3">
+                <property name="name" value="password"/>
+                <property name="value" value="${dax.database.password}"/>
+                <property name="auxiliary;index" value="16"/>
+                <property name="auxiliary;wrapIn" value="16"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#1">
+        <properties>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="DAX_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="DAX_DB_Connector"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="17"/>
+            <property name="dataSource-ref to JDBC DataSource" value="DAX_Data_Source"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                <property name="value" value="UPDATE dbo.userinfo SET enable=0 WHERE networkAlias = #[payload['user_name']]"/>
+                <property name="key" value="inactivate_dax_Emp"/>
+                <property name="auxiliary;index" value="18"/>
+                <property name="auxiliary;wrapIn" value="18"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <description></description>
+</mule-configuration>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+    xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
+    xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
+    xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz"
+    xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+    xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+    xmlns:https="http://www.mulesoft.org/schema/mule/https"
+    xmlns="http://www.mulesoft.org/schema/mule/core"
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="ServiceNow-SOAPSchedulerFlow" doc:name="ServiceNow-SOAPSchedulerFlow">
+        <composite-source doc:name="Composite Source">
+            <!-- Inbound endpoint to start the flow using Quartz Scheduler -->
+            <quartz:inbound-endpoint jobName="SOAPSchedular" cronExpression="${blackhawk.serviceNow.cron}" responseTimeout="10000" connector-ref="QuartzConnector" doc:name="Quartz" repeatInterval="0">
+                <quartz:event-generator-job>
+                    <quartz:payload>Started Quartz</quartz:payload>
+                </quartz:event-generator-job>
+            </quartz:inbound-endpoint>
+
+            <!-- Inbound endpoint to invoke the flow from a browser manually apart from Quartz -->
+            <http:inbound-endpoint address="http://localhost:8082/serviceNowSOAPGetRecords" doc:name="HTTP"/>
+
+            <!-- Inbound endpoint to invoke the flow for Integration Testing -->
+            <vm:inbound-endpoint path="servicenow.inactive.users.inbound" doc:name="VM"/>
+        </composite-source>
+
+        <set-variable variableName="LastRunTime" doc:name="Variable" value="#[server.dateTime.plusDays(-1).format('yyyy-MM-dd HH:mm:ss')]"/>
+
+        <scripting:component doc:name="Script">
+            <scripting:script engine="groovy">
+              <![CDATA[
+                return """
+                  <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sys="https://bhndev.service-now.com/sys_user">
+                    <soapenv:Header/>
+                    <soapenv:Body>
+                      <sys:getRecords>
+                        <__encoded_query>active=0^locked_out=1</__encoded_query>
+                        <__order_by_desc>sys_updated_on</__order_by_desc>
+                      </sys:getRecords>
+                    </soapenv:Body>
+                  </soapenv:Envelope>
+                """
+              ]]>
+            </scripting:script>
+        </scripting:component>
+
+        <logger message="After my guy: #[payload]" level="INFO" doc:name="Logger"/>
+
+        <https:outbound-endpoint exchange-pattern="request-response" method="POST" address="https://gfoot00:Blackhawk1!@bhndev.service-now.com/sys_user.do?SOAP" doc:name="HTTP" connector-ref="HttpsConnector">
+            <set-property propertyName="Accept-Encoding" value="gzip"/>
+            <response>
+                <gzip-uncompress-transformer/>
+            </response>
+        </https:outbound-endpoint>
+
+        <scripting:component doc:name="Script">
+            <scripting:script engine="groovy"><![CDATA[
+              def envelope = new XmlSlurper().parse(payload).declareNamespace(soap: 'http://schemas.xmlsoap.org/soap/envelope/')
+
+              return envelope.'soap:Body'.getRecordsResponse.getRecordsResult.collect {
+                  [
+                          active: it.active.text(),
+                          email: it.email.text(),
+                          employee_number: it.employee_number.text(),
+                          locked_out: it.locked_out.text(),
+                          sys_id: it.sys_id.text(),
+                          user_name: it.user_name.text(),
+                          updatedOn: it.sys_updated_on.text()
+                  ]
+              }
+            ]]></scripting:script>
+        </scripting:component>
+
+        <payload-type-filter expectedType="java.util.ArrayList" doc:name="Payload"/>
+        <foreach doc:name="For Each">
+            <choice doc:name="Choice">
+                <when expression="payload['updatedOn']>=flowVars['LastRunTime']" evaluator="groovy">
+                    <logger level="INFO" message="Record to be processed is :: #[message:payload]" doc:name="Logger"/>
+                    <jdbc-ee:outbound-endpoint connector-ref="DAX_DB_Connector" exchange-pattern="one-way" queryKey="inactivate_dax_Emp" doc:name="Database"/>
+                </when>
+                <otherwise>
+                    <logger level="INFO" message="Record ignored as last updated date is : #[payload['updatedOn']]" doc:name="Logger"/>
+                </otherwise>
+            </choice>
+        </foreach>
+        <vm:outbound-endpoint path="servicenow.inactive.users.outbound" doc:name="VM"/>
+    </flow>
+</mule>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/*.java" kind="src" path="src/main/app"/>
+	<classpathentry kind="src" path="src/main/groovy"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry excluding="**/*.java" kind="src" output="target/test-classes" path="src/test/resources"/>
+	<classpathentry kind="con" path="MULE_RUNTIME"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="libs/asm-3.3.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-dbcp-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/commons-dbutils-1.2.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-api-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-common-utilities-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-bindings-soap-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-bindings-xml-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-core-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-databinding-aegis-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-databinding-jaxb-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-databinding-jibx-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-frontend-jaxws-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-frontend-simple-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-management-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-transports-common-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-transports-http-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-transports-local-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-ws-addr-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-ws-rm-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-rt-ws-security-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-tools-common-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/cxf-wstx-msv-validation-2.5.9.jar"/>
+	<classpathentry kind="lib" path="libs/geronimo-javamail_1.4_spec-1.7.1.jar"/>
+	<classpathentry kind="lib" path="libs/groovy-all-1.8.6.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-4.2.jar"/>
+	<classpathentry kind="lib" path="libs/httpcore-4.2.jar"/>
+	<classpathentry kind="lib" path="libs/jdom.jar"/>
+	<classpathentry kind="lib" path="libs/jibx-extras-1.2.4.5.jar"/>
+	<classpathentry kind="lib" path="libs/jibx-run-1.2.4.5.jar"/>
+	<classpathentry kind="lib" path="libs/jibx-schema-1.2.4.5.jar"/>
+	<classpathentry kind="lib" path="libs/junit-4.9.jar"/>
+	<classpathentry kind="lib" path="libs/commons-pool-1.5.3.jar"/>
+	<classpathentry kind="lib" path="libs/jaxb-api-2.1-osgi.jar"/>
+	<classpathentry kind="lib" path="libs/jaxb-impl-2.1.9-osgi.jar"/>
+	<classpathentry kind="lib" path="libs/jaxb-xjc-2.1.9-osgi.jar"/>
+	<classpathentry kind="lib" path="libs/jtds-1.2.4.jar"/>
+	<classpathentry kind="lib" path="libs/ftplet-api-1.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/ftpserver-core-1.0.4.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
