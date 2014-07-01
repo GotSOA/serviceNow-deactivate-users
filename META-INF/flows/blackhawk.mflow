@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="blackhawk">
-    <flow SubFlow="false" name="ServiceNow-SOAPSchedulerFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="40501660-32c3-4892-bfe5-f511bcd1f97c">
+    <flow SubFlow="false" name="ServiceNow-SOAPSchedulerFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="34523c55-2511-47e7-ac1f-6f411a132e1d">
         <properties>
             <property name="initialState"/>
             <property name="processingStrategy2"/>
@@ -12,7 +12,7 @@
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
             <graphicalData x="0" y="0" width="0" height="0"/>
             <multi-source index="0" name="Composite Source" type="http://www.mulesoft.org/schema/mule/core/composite-source" entity-id="Composite Source#1">
-                <graphicalData x="21" y="157" width="104" height="246"/>
+                <graphicalData x="21" y="31" width="104" height="172"/>
                 <properties>
                     <property name="auxiliary;index" value="2"/>
                 </properties>
@@ -66,7 +66,7 @@
                         <property name="ref"/>
                         <property name="httpLabel"/>
                         <property name="transformer-refs"/>
-                        <property name="address" value="http://localhost:8082/serviceNowSOAPGetRecords"/>
+                        <property name="address" value="http://${http.harness.host.address}:${http.harness.port}/${http.harness.path}"/>
                         <property name="encoding"/>
                         <property name="path"/>
                         <property name="responseTransformer-refs"/>
@@ -78,65 +78,47 @@
                         <property name="connector-ref"/>
                     </properties>
                 </endpoint>
-                <endpoint direction="Inbound" message-exchange-pattern="OneWay" name="VM" type="http://www.mulesoft.org/schema/mule/vm/endpoint" entity-id="VM#1">
-                    <graphicalData x="0" y="0" width="0" height="0"/>
-                    <properties>
-                        <property name="businessEventsLabel"/>
-                        <property name="disableTransportTransformer"/>
-                        <property name="exchange-pattern"/>
-                        <property name="tracking:enable-default-events"/>
-                        <property name="ref"/>
-                        <property name="transformer-refs"/>
-                        <property name="address"/>
-                        <property name="path" value="servicenow.inactive.users.inbound"/>
-                        <property name="encoding"/>
-                        <property name="responseTransformer-refs"/>
-                        <property name="mimeType"/>
-                        <property name="auxiliary;index" value="7"/>
-                        <property name="responseTimeout"/>
-                        <property name="connector-ref"/>
-                    </properties>
-                </endpoint>
             </multi-source>
             <pattern name="Variable" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
-                <graphicalData x="185" y="246" width="68" height="69"/>
+                <graphicalData x="185" y="83" width="68" height="69"/>
                 <properties>
                     <property name="variableName" value="LastRunTime"/>
                     <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
                     <property name="value" value="#[server.dateTime.plusDays(-1).format('yyyy-MM-dd HH:mm:ss')]"/>
-                    <property name="auxiliary;index" value="8"/>
+                    <property name="auxiliary;index" value="7"/>
                 </properties>
+                <description></description>
             </pattern>
             <pattern name="Script" type="http://www.mulesoft.org/schema/mule/scripting/component" entity-id="Script#1">
-                <graphicalData x="313" y="246" width="68" height="69"/>
+                <graphicalData x="313" y="83" width="68" height="69"/>
                 <properties>
                     <property name="updated"/>
-                    <property name="auxiliary;index" value="9"/>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/core/refInterceptorStackType;1398139371">
+                    <property name="auxiliary;index" value="8"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/core/refInterceptorStackType;239867890">
                         <property name="ref" value=""/>
                         <property name="isProcessed$$$$ " value="true"/>
                     </property-collection>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;755094842">
-                        <property name="text" value="&#xA;              &#xA;                return &quot;&quot;&quot;&#xA;                  &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:sys=&quot;https://bhndev.service-now.com/sys_user&quot;&gt;&#xA;                    &lt;soapenv:Header/&gt;&#xA;                    &lt;soapenv:Body&gt;&#xA;                      &lt;sys:getRecords&gt;&#xA;                        &lt;__encoded_query&gt;active=0^locked_out=1&lt;/__encoded_query&gt;&#xA;                        &lt;__order_by_desc&gt;sys_updated_on&lt;/__order_by_desc&gt;&#xA;                      &lt;/sys:getRecords&gt;&#xA;                    &lt;/soapenv:Body&gt;&#xA;                  &lt;/soapenv:Envelope&gt;&#xA;                &quot;&quot;&quot;&#xA;              &#xA;            "/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;47034798">
+                        <property name="text" value="&#xA;              &#xA;               import java.text.SimpleDateFormat&#xA;               now = Calendar.instance&#xA;               def plainFormatter = new SimpleDateFormat(&quot;yyyy-MM-dd hh:mm:ss&quot;)&#xA;               def daybefore = plainFormatter.format(now.time-2)&#xA;               def script_text1 = &quot;&quot;&quot;\&#xA;                  &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:sys=&quot;https://bhndev.service-now.com/sys_user&quot;&gt;&#xA;                    &lt;soapenv:Header/&gt;&#xA;                    &lt;soapenv:Body&gt;&#xA;                      &lt;sys:getRecords&gt;&#xA;                        &lt;__encoded_query&gt;active=0^locked_out=1^sys_updated_on&gt;&#xA;              &quot;&quot;&quot;&#xA;&#x9;&#x9;&#x9;  def script_text2 = &quot;&quot;&quot;\&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;/__encoded_query&gt;                        &#xA;                        &lt;__order_by_desc&gt;sys_updated_on&lt;/__order_by_desc&gt;&#xA;                      &lt;/sys:getRecords&gt;&#xA;                    &lt;/soapenv:Body&gt;&#xA;                  &lt;/soapenv:Envelope&gt;&#xA;              &quot;&quot;&quot;&#xA;              return script_text1 + daybefore + script_text2&#xA;              &#xA;            "/>
                         <property name="engine" value="groovy"/>
                         <property name="isProcessed$$$$ " value="true"/>
-                        <property name="auxiliary;index" value="10"/>
+                        <property name="auxiliary;index" value="9"/>
                     </property-collection>
                 </properties>
                 <description></description>
             </pattern>
             <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
-                <graphicalData x="441" y="246" width="68" height="69"/>
+                <graphicalData x="441" y="83" width="68" height="69"/>
                 <properties>
-                    <property name="message" value="After my guy: #[payload]"/>
+                    <property name="message" value="The payload: #[payload]"/>
                     <property name="category"/>
                     <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="11"/>
+                    <property name="auxiliary;index" value="10"/>
                 </properties>
                 <description></description>
             </pattern>
             <endpoint direction="Outbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#2">
-                <graphicalData x="569" y="246" width="68" height="69"/>
+                <graphicalData x="569" y="83" width="68" height="69"/>
                 <properties>
                     <property name="port"/>
                     <property name="host"/>
@@ -152,99 +134,243 @@
                     <property name="ref"/>
                     <property name="transformer-refs"/>
                     <property name="httpLabel"/>
-                    <property name="address" value="https://gfoot00:Blackhawk1!@bhndev.service-now.com/sys_user.do?SOAP"/>
+                    <property name="address" value="https://${sn.user}:${sn.password}@${sn.endpoint}"/>
                     <property name="encoding"/>
                     <property name="path"/>
                     <property name="responseTransformer-refs"/>
                     <property name="method" value="POST"/>
                     <property name="user"/>
-                    <property name="auxiliary;index" value="12"/>
+                    <property name="auxiliary;index" value="11"/>
                     <property name="connector-ref-outbound" value="HttpsConnector"/>
                     <property name="mimeType"/>
                     <property name="responseTimeout"/>
                     <property name="connector-ref" value="HttpsConnector"/>
                 </properties>
+                <description></description>
             </endpoint>
             <pattern name="Script" type="http://www.mulesoft.org/schema/mule/scripting/component" entity-id="Script#2">
-                <graphicalData x="697" y="246" width="68" height="69"/>
+                <graphicalData x="697" y="83" width="68" height="69"/>
                 <properties>
-                    <property name="updated"/>
-                    <property name="auxiliary;index" value="16"/>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/core/refInterceptorStackType;1814387693">
-                        <property name="ref" value=""/>
-                        <property name="isProcessed$$$$ " value="true"/>
-                    </property-collection>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;506473022">
+                    <property name="script-ref"/>
+                    <property name="auxiliary;index" value="15"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
                         <property name="text" value="&#xA;              def envelope = new XmlSlurper().parse(payload).declareNamespace(soap: 'http://schemas.xmlsoap.org/soap/envelope/')&#xA;&#xA;              return envelope.'soap:Body'.getRecordsResponse.getRecordsResult.collect {&#xA;                  [&#xA;                          active: it.active.text(),&#xA;                          email: it.email.text(),&#xA;                          employee_number: it.employee_number.text(),&#xA;                          locked_out: it.locked_out.text(),&#xA;                          sys_id: it.sys_id.text(),&#xA;                          user_name: it.user_name.text(),&#xA;                          updatedOn: it.sys_updated_on.text()&#xA;                  ]&#xA;              }&#xA;            "/>
                         <property name="engine" value="groovy"/>
                         <property name="isProcessed$$$$ " value="true"/>
-                        <property name="auxiliary;index" value="17"/>
+                        <property name="auxiliary;wrapIn" value="16"/>
+                        <property name="auxiliary;index" value="16"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script-for-properties;0">
+                        <property name="text" value="&#xA;              def envelope = new XmlSlurper().parse(payload).declareNamespace(soap: 'http://schemas.xmlsoap.org/soap/envelope/')&#xA;&#xA;              return envelope.'soap:Body'.getRecordsResponse.getRecordsResult.collect {&#xA;                  [&#xA;                          active: it.active.text(),&#xA;                          email: it.email.text(),&#xA;                          employee_number: it.employee_number.text(),&#xA;                          locked_out: it.locked_out.text(),&#xA;                          sys_id: it.sys_id.text(),&#xA;                          user_name: it.user_name.text(),&#xA;                          updatedOn: it.sys_updated_on.text()&#xA;                  ]&#xA;              }&#xA;            "/>
+                        <property name="engine" value="groovy"/>
+                        <property name="isProcessed$$$$ " value="true"/>
+                        <property name="auxiliary;wrapIn" value="16"/>
+                        <property name="auxiliary;index" value="16"/>
                     </property-collection>
                 </properties>
-                <description></description>
             </pattern>
             <pattern name="Payload" type="org.mule.tooling.ui.modules.core.filter.PayloadFilter" entity-id="Payload#1">
-                <graphicalData x="953" y="246" width="68" height="69"/>
+                <graphicalData x="825" y="83" width="68" height="69"/>
                 <properties>
                     <property name="expectedType" value="java.util.ArrayList"/>
-                    <property name="auxiliary;index" value="19"/>
+                    <property name="auxiliary;index" value="17"/>
                 </properties>
             </pattern>
             <scope name="For Each" type="http://www.mulesoft.org/schema/mule/core/foreach" entity-id="For Each#1">
-                <graphicalData x="1081" y="161" width="390" height="238"/>
+                <graphicalData x="1116" y="59" width="122" height="116"/>
                 <properties>
                     <property name="counterVariableName"/>
                     <property name="rootMessageVariableName"/>
                     <property name="batchSize"/>
                     <property name="collection"/>
-                    <property name="auxiliary;index" value="20"/>
+                    <property name="auxiliary;index" value="19"/>
                 </properties>
                 <compartment entity-id="compartment#1">
                     <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
-                        <splitter index="21" name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#1">
+                        <pattern name="Flow Reference" type="http://www.mulesoft.org/schema/mule/core/flow-ref" entity-id="Flow Reference#1">
                             <graphicalData x="0" y="0" width="0" height="0"/>
                             <properties>
-<property name=";INDEX" value="21"/>
-<property-collection name="e419e881-ff46-4567-a1bd-c6f59662f61e">
-    <property name="choice.expression" value="payload['updatedOn']&gt;=flowVars['LastRunTime']"/>
-    <property-collection name="choice.attributes">
-        <property name="expression" value="payload['updatedOn']&gt;=flowVars['LastRunTime']"/>
-        <property name="evaluator" value="groovy"/>
-    </property-collection>
-</property-collection>
-<property-collection name="a1255dd8-2f26-479c-85a6-5ccec8203723">
+<property name="name" value="VerifyAndUpdateUserInDaxFlow"/>
+<property name="auxiliary;index" value="20"/>
+                            </properties>
+                            <description></description>
+                        </pattern>
+                    </lane>
+                </compartment>
+            </scope>
+            <pattern name="FinalLogger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#2">
+                <graphicalData x="1298" y="83" width="76" height="69"/>
+                <properties>
+                    <property name="message" value="all users processed"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="21"/>
+                </properties>
+                <description></description>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="VerifyAndUpdateUserInDaxFlow" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="9b948a94-2e8c-4487-b5f1-d564087cabf2">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="22"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <pattern name="serviceNowUserName" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
+                <graphicalData x="21" y="406" width="130" height="69"/>
+                <properties>
+                    <property name="updated"/>
+                    <property name="variableName" value="serviceNowUserName"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="value" value="#[payload['user_name']]"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Is DAX User" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#1">
+                <graphicalData x="339" y="406" width="74" height="69"/>
+                <properties>
+                    <property name=""/>
+                    <property name="businessEventsLabel"/>
+                    <property name="pollingFrequency"/>
+                    <property name="queryTimeout" value="-1"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="queryKey" value="is_dax_user"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="23"/>
+                    <property name="connector-ref" value="DAX_DB_Connector_Is_Dax_User"/>
+                </properties>
+                <description></description>
+            </endpoint>
+            <splitter index="25" name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#1">
+                <graphicalData x="473" y="271" width="1001" height="339"/>
+                <properties>
+                    <property name=";INDEX" value="25"/>
+                    <property-collection name="baa822d5-90fd-48b4-aeed-78de0ed959b5">
+                        <property name="choice.otherwise" value="true"/>
+                        <property-collection name="choice.attributes"/>
+                    </property-collection>
+                    <property-collection name="8e6f6798-b3f1-47d5-be8b-068d814a099a">
+                        <property name="choice.expression" value="payload[0].count&gt;0"/>
+                        <property-collection name="choice.attributes">
+                            <property name="expression" value="payload[0].count&gt;0"/>
+                        </property-collection>
+                    </property-collection>
+                </properties>
+                <description></description>
+                <pattern name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#2">
+                    <properties>
+                        <property name=";INDEX" value="25"/>
+                        <property-collection name="baa822d5-90fd-48b4-aeed-78de0ed959b5">
+                            <property name="choice.otherwise" value="true"/>
+                            <property-collection name="choice.attributes"/>
+                        </property-collection>
+                        <property-collection name="8e6f6798-b3f1-47d5-be8b-068d814a099a">
+                            <property name="choice.expression" value="payload[0].count&gt;0"/>
+                            <property-collection name="choice.attributes">
+<property name="expression" value="payload[0].count&gt;0"/>
+                            </property-collection>
+                        </property-collection>
+                    </properties>
+                </pattern>
+                <compartment entity-id="compartment#2">
+                    <lane hadOnlyOneElement="false" index="27" isChoiceOtherwiseLane="false" entity-id="8e6f6798-b3f1-47d5-be8b-068d814a099a">
+                        <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="750ac90d-2511-41b8-ba56-5b401f93e229">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="message" value="User exists in DAX, so try processing it :: #[flowVars.serviceNowUserName]"/>
+<property name="category" value=""/>
+<property name="level" value="INFO"/>
+<property name="updated"/>
+                            </properties>
+                            <description></description>
+                        </pattern>
+                        <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Get Current Status" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#2">
+                            <graphicalData x="433" y="349" width="110" height="69"/>
+                            <properties>
+<property name=""/>
+<property name="businessEventsLabel"/>
+<property name="pollingFrequency"/>
+<property name="queryTimeout" value="-1"/>
+<property name="disableTransportTransformer"/>
+<property name="exchange-pattern" value="request-response"/>
+<property name="queryKey" value="get_status"/>
+<property name="tracking:enable-default-events"/>
+<property name="ref"/>
+<property name="transformer-refs"/>
+<property name="address"/>
+<property name="encoding"/>
+<property name="responseTransformer-refs"/>
+<property name="mimeType"/>
+<property name="responseTimeout"/>
+<property name="auxiliary;index" value="27"/>
+<property name="connector-ref" value="DAX_DB_Connector_Get_Status"/>
+                            </properties>
+                            <description></description>
+                        </endpoint>
+                        <splitter index="28" name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#3">
+                            <graphicalData x="603" y="280" width="541" height="207"/>
+                            <properties>
+<property name="updated"/>
+<property name=";INDEX" value="28"/>
+<property name="tracking:enable-default-events" value="false"/>
+<property-collection name="b12e49ab-d58f-4c04-9faf-ee155ed5faa0">
     <property name="choice.otherwise" value="true"/>
+    <property name="choice.expression" value=""/>
     <property-collection name="choice.attributes"/>
 </property-collection>
-                            </properties>
-                            <pattern name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#2">
-<properties>
-    <property name=";INDEX" value="21"/>
-    <property-collection name="e419e881-ff46-4567-a1bd-c6f59662f61e">
-        <property name="choice.expression" value="payload['updatedOn']&gt;=flowVars['LastRunTime']"/>
-        <property-collection name="choice.attributes">
-            <property name="expression" value="payload['updatedOn']&gt;=flowVars['LastRunTime']"/>
-            <property name="evaluator" value="groovy"/>
-        </property-collection>
+<property-collection name="ba4a523e-e3c1-4375-985c-a615546173d0">
+    <property name="choice.expression" value="payload[0].enable==1"/>
+    <property-collection name="choice.attributes">
+        <property name="expression" value=""/>
     </property-collection>
-    <property-collection name="a1255dd8-2f26-479c-85a6-5ccec8203723">
+</property-collection>
+                            </properties>
+                            <description></description>
+                            <pattern name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#4">
+<properties>
+    <property name="updated"/>
+    <property name=";INDEX" value="28"/>
+    <property name="tracking:enable-default-events" value="false"/>
+    <property-collection name="b12e49ab-d58f-4c04-9faf-ee155ed5faa0">
         <property name="choice.otherwise" value="true"/>
+        <property name="choice.expression" value=""/>
         <property-collection name="choice.attributes"/>
+    </property-collection>
+    <property-collection name="ba4a523e-e3c1-4375-985c-a615546173d0">
+        <property name="choice.expression" value="payload[0].enable==1"/>
+        <property-collection name="choice.attributes">
+            <property name="expression" value=""/>
+        </property-collection>
     </property-collection>
 </properties>
                             </pattern>
-                            <compartment entity-id="compartment#2">
-<lane hadOnlyOneElement="false" index="23" isChoiceOtherwiseLane="false" entity-id="e419e881-ff46-4567-a1bd-c6f59662f61e">
-    <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#3">
+                            <compartment entity-id="compartment#3">
+<lane hadOnlyOneElement="false" index="30" isChoiceOtherwiseLane="false" entity-id="ba4a523e-e3c1-4375-985c-a615546173d0">
+    <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
-            <property name="message" value="Record to be processed is :: #[message:payload]"/>
-            <property name="category"/>
+            <property name="message" value="Record to be processed is :: #[flowVars.serviceNowUserName]"/>
+            <property name="category" value=""/>
             <property name="level" value="INFO"/>
-            <property name="auxiliary;index" value="23"/>
+            <property name="updated"/>
+            <property name="auxiliary;index" value="30"/>
         </properties>
+        <description></description>
     </pattern>
-    <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#1">
+    <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="User updated in DAX" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#3">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
             <property name=""/>
@@ -262,46 +388,108 @@
             <property name="responseTransformer-refs"/>
             <property name="mimeType"/>
             <property name="responseTimeout"/>
-            <property name="auxiliary;index" value="24"/>
+            <property name="auxiliary;index" value="31"/>
             <property name="connector-ref" value="DAX_DB_Connector"/>
         </properties>
     </endpoint>
-</lane>
-<lane hadOnlyOneElement="false" index="26" isChoiceOtherwiseLane="true" entity-id="a1255dd8-2f26-479c-85a6-5ccec8203723">
-    <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
+    <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Audit" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#4">
         <graphicalData x="0" y="0" width="0" height="0"/>
         <properties>
-            <property name="message" value="Record ignored as last updated date is : #[payload['updatedOn']]"/>
-            <property name="category"/>
-            <property name="level" value="INFO"/>
-            <property name="auxiliary;index" value="26"/>
+            <property name=""/>
+            <property name="businessEventsLabel"/>
+            <property name="pollingFrequency"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="disableTransportTransformer"/>
+            <property name="exchange-pattern" value="one-way"/>
+            <property name="queryKey" value="audit_dax_Emp"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="ref"/>
+            <property name="transformer-refs"/>
+            <property name="address"/>
+            <property name="encoding"/>
+            <property name="responseTransformer-refs"/>
+            <property name="mimeType"/>
+            <property name="responseTimeout"/>
+            <property name="auxiliary;index" value="32"/>
+            <property name="connector-ref" value="AUDIT_DB_Connector"/>
         </properties>
+    </endpoint>
+</lane>
+<lane hadOnlyOneElement="false" index="34" isChoiceOtherwiseLane="true" entity-id="b12e49ab-d58f-4c04-9faf-ee155ed5faa0">
+    <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="92675b25-d037-4b6a-bf83-2a140ff447ed">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="message" value="Record already processed in DAX :: #[flowVars.serviceNowUserName]"/>
+            <property name="category" value=""/>
+            <property name="level" value="INFO"/>
+            <property name="updated"/>
+        </properties>
+        <description></description>
     </pattern>
+    <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Audit - User Already Deactivated" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#5">
+        <graphicalData x="1205" y="399" width="185" height="69"/>
+        <properties>
+            <property name=""/>
+            <property name="businessEventsLabel"/>
+            <property name="pollingFrequency"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="disableTransportTransformer"/>
+            <property name="exchange-pattern" value="one-way"/>
+            <property name="queryKey" value="user_already_deactivated"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="ref"/>
+            <property name="transformer-refs"/>
+            <property name="address"/>
+            <property name="encoding"/>
+            <property name="responseTransformer-refs"/>
+            <property name="mimeType"/>
+            <property name="responseTimeout"/>
+            <property name="auxiliary;index" value="34"/>
+            <property name="connector-ref" value="AUDIT_DB_User_Already_Deactivated"/>
+        </properties>
+    </endpoint>
 </lane>
                             </compartment>
                         </splitter>
                     </lane>
+                    <lane hadOnlyOneElement="false" index="36" isChoiceOtherwiseLane="true" entity-id="baa822d5-90fd-48b4-aeed-78de0ed959b5">
+                        <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#5">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="message" value="Record ignored - User Does Not exist in DAX :: #[flowVars.serviceNowUserName]"/>
+<property name="category" value=""/>
+<property name="level" value="INFO"/>
+<property name="updated"/>
+<property name="auxiliary;index" value="36"/>
+                            </properties>
+                            <description></description>
+                        </pattern>
+                        <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Audit - Not A DAX User" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#6">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name=""/>
+<property name="businessEventsLabel"/>
+<property name="pollingFrequency"/>
+<property name="queryTimeout" value="-1"/>
+<property name="disableTransportTransformer"/>
+<property name="exchange-pattern" value="one-way"/>
+<property name="queryKey" value="log_not_a_dax_user"/>
+<property name="tracking:enable-default-events"/>
+<property name="ref"/>
+<property name="transformer-refs"/>
+<property name="address"/>
+<property name="encoding"/>
+<property name="responseTransformer-refs"/>
+<property name="mimeType"/>
+<property name="responseTimeout"/>
+<property name="auxiliary;index" value="37"/>
+<property name="connector-ref" value="AUDIT_DB_Not_A_Dax_User"/>
+                            </properties>
+                            <description></description>
+                        </endpoint>
+                    </lane>
                 </compartment>
-            </scope>
-            <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="VM" type="http://www.mulesoft.org/schema/mule/vm/endpoint" entity-id="VM#2">
-                <graphicalData x="1531" y="246" width="68" height="69"/>
-                <properties>
-                    <property name="businessEventsLabel"/>
-                    <property name="disableTransportTransformer"/>
-                    <property name="exchange-pattern"/>
-                    <property name="tracking:enable-default-events"/>
-                    <property name="ref"/>
-                    <property name="transformer-refs"/>
-                    <property name="address"/>
-                    <property name="path" value="servicenow.inactive.users.outbound"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
-                    <property name="mimeType"/>
-                    <property name="auxiliary;index" value="27"/>
-                    <property name="responseTimeout"/>
-                    <property name="connector-ref"/>
-                </properties>
-            </endpoint>
+            </splitter>
         </lane>
     </flow>
 </mule-configuration>

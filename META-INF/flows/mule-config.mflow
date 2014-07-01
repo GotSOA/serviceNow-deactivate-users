@@ -17,7 +17,7 @@
         <properties>
             <property name="properties-ref"/>
             <property name="order" value="1"/>
-            <property name="location" value="classpath:config-override.properties"/>
+            <property name="location" value="classpath:${mule.env}-config.properties"/>
             <property name="local-override"/>
             <property name="system-properties-mode"/>
             <property name="file-encoding"/>
@@ -35,7 +35,7 @@
             <property name="auxiliary;index" value="3"/>
             <property name="scheduler-ref"/>
             <property-collection name="@http://www.mulesoft.org/schema/mule/quartz/factory-property;0">
-                <property name="value" value="MuleScheduler1"/>
+                <property name="value" value="MuleScheduler2"/>
                 <property name="key" value="org.quartz.scheduler.instanceName"/>
                 <property name="auxiliary;index" value="4"/>
                 <property name="auxiliary;wrapIn" value="4"/>
@@ -96,8 +96,8 @@
             <property name="dynamicNotification"/>
             <property name="sendBufferSize" value="0"/>
             <property name="ENABLE_MODE_SWITCH"/>
-            <property name="proxyPassword"/>
             <property name="auxiliary;index" value="10"/>
+            <property name="proxyPassword"/>
         </properties>
     </global-element>
     <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#1">
@@ -114,41 +114,185 @@
             <property name="lazy-init"/>
             <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
             <property name="id" value="DAX_Data_Source"/>
-            <property name="primary"/>
             <property name="name"/>
+            <property name="primary"/>
             <property name="autowire"/>
             <property name="destroy-method" value="close"/>
-            <property name="auxiliary;index" value="12"/>
             <property name="auxiliary;wrapIn" value="11"/>
+            <property name="auxiliary;index" value="12"/>
             <property name="depends-on"/>
             <property-collection name="@http://www.springframework.org/schema/beans/property;0">
-                <property name="name" value="driverClassName"/>
-                <property name="value" value="${dax.database.driver}"/>
+                <property name="name" value="url"/>
+                <property name="value" value="${dax.database.url}"/>
                 <property name="auxiliary;index" value="13"/>
                 <property name="auxiliary;wrapIn" value="13"/>
             </property-collection>
             <property-collection name="@http://www.springframework.org/schema/beans/property;1">
-                <property name="name" value="url"/>
-                <property name="value" value="${dax.database.url}"/>
+                <property name="name" value="username"/>
+                <property name="value" value="${dax.database.user}"/>
                 <property name="auxiliary;index" value="14"/>
                 <property name="auxiliary;wrapIn" value="14"/>
             </property-collection>
             <property-collection name="@http://www.springframework.org/schema/beans/property;2">
-                <property name="name" value="username"/>
-                <property name="value" value="${dax.database.user}"/>
+                <property name="name" value="password"/>
+                <property name="value" value="${dax.database.password}"/>
                 <property name="auxiliary;index" value="15"/>
                 <property name="auxiliary;wrapIn" value="15"/>
             </property-collection>
             <property-collection name="@http://www.springframework.org/schema/beans/property;3">
-                <property name="name" value="password"/>
-                <property name="value" value="${dax.database.password}"/>
+                <property name="name" value="driverClassName"/>
+                <property name="value" value="${dax.database.driver}"/>
                 <property name="auxiliary;index" value="16"/>
                 <property name="auxiliary;wrapIn" value="16"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;4">
+                <property name="name" value="initialSize"/>
+                <property name="value" value="5"/>
+                <property name="auxiliary;index" value="17"/>
+                <property name="auxiliary;wrapIn" value="17"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;5">
+                <property name="name" value="testOnBorrow"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="18"/>
+                <property name="auxiliary;wrapIn" value="18"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;6">
+                <property name="name" value="validationQuery"/>
+                <property name="value" value="${jdbc.validationQuery}"/>
+                <property name="auxiliary;index" value="19"/>
+                <property name="auxiliary;wrapIn" value="19"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;7">
+                <property name="name" value="maxWait"/>
+                <property name="value" value="60000"/>
+                <property name="auxiliary;index" value="20"/>
+                <property name="auxiliary;wrapIn" value="20"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;8">
+                <property name="name" value="maxActive"/>
+                <property name="value" value="50"/>
+                <property name="auxiliary;index" value="21"/>
+                <property name="auxiliary;wrapIn" value="21"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;9">
+                <property name="name" value="removeAbandoned"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="22"/>
+                <property name="auxiliary;wrapIn" value="22"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;10">
+                <property name="name" value="removeAbandonedTimeout"/>
+                <property name="value" value="300"/>
+                <property name="auxiliary;index" value="23"/>
+                <property name="auxiliary;wrapIn" value="23"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;11">
+                <property name="name" value="logAbandoned"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="24"/>
+                <property name="auxiliary;wrapIn" value="24"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#2">
+        <properties>
+            <property name="factory-bean"/>
+            <property name="abstract"/>
+            <property name="scope"/>
+            <property name="init-method"/>
+            <property name="autowire-candidate"/>
+            <property name="factory-method"/>
+            <property name="class" value="org.apache.commons.dbcp.BasicDataSource"/>
+            <property name="parent"/>
+            <property name="children"/>
+            <property name="lazy-init"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
+            <property name="id" value="AUDIT_Data_Source"/>
+            <property name="name"/>
+            <property name="primary"/>
+            <property name="autowire"/>
+            <property name="destroy-method" value="close"/>
+            <property name="auxiliary;wrapIn" value="11"/>
+            <property name="auxiliary;index" value="25"/>
+            <property name="depends-on"/>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;0">
+                <property name="name" value="url"/>
+                <property name="value" value="${audit.database.url}"/>
+                <property name="auxiliary;index" value="26"/>
+                <property name="auxiliary;wrapIn" value="26"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;1">
+                <property name="name" value="username"/>
+                <property name="value" value="${audit.database.user}"/>
+                <property name="auxiliary;index" value="27"/>
+                <property name="auxiliary;wrapIn" value="27"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;2">
+                <property name="name" value="password"/>
+                <property name="value" value="${audit.database.password}"/>
+                <property name="auxiliary;index" value="28"/>
+                <property name="auxiliary;wrapIn" value="28"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;3">
+                <property name="name" value="driverClassName"/>
+                <property name="value" value="${audit.database.driver}"/>
+                <property name="auxiliary;index" value="29"/>
+                <property name="auxiliary;wrapIn" value="29"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;4">
+                <property name="name" value="initialSize"/>
+                <property name="value" value="5"/>
+                <property name="auxiliary;index" value="30"/>
+                <property name="auxiliary;wrapIn" value="30"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;5">
+                <property name="name" value="testOnBorrow"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="31"/>
+                <property name="auxiliary;wrapIn" value="31"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;6">
+                <property name="name" value="validationQuery"/>
+                <property name="value" value="${jdbc.validationQuery}"/>
+                <property name="auxiliary;index" value="32"/>
+                <property name="auxiliary;wrapIn" value="32"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;7">
+                <property name="name" value="maxWait"/>
+                <property name="value" value="60000"/>
+                <property name="auxiliary;index" value="33"/>
+                <property name="auxiliary;wrapIn" value="33"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;8">
+                <property name="name" value="maxActive"/>
+                <property name="value" value="50"/>
+                <property name="auxiliary;index" value="34"/>
+                <property name="auxiliary;wrapIn" value="34"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;9">
+                <property name="name" value="removeAbandoned"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="35"/>
+                <property name="auxiliary;wrapIn" value="35"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;10">
+                <property name="name" value="removeAbandonedTimeout"/>
+                <property name="value" value="300"/>
+                <property name="auxiliary;index" value="36"/>
+                <property name="auxiliary;wrapIn" value="36"/>
+            </property-collection>
+            <property-collection name="@http://www.springframework.org/schema/beans/property;11">
+                <property name="name" value="logAbandoned"/>
+                <property name="value" value="true"/>
+                <property name="auxiliary;index" value="37"/>
+                <property name="auxiliary;wrapIn" value="37"/>
             </property-collection>
         </properties>
     </global-element>
     <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#1">
         <properties>
+            <property name="handleOutputResultSets"/>
             <property name="dispatcherPoolFactory-ref"/>
             <property name="transactionPerMessage"/>
             <property name="resultSetHandler-ref"/>
@@ -159,13 +303,128 @@
             <property name="validateConnections" value="true"/>
             <property name="dynamicNotification"/>
             <property name="queryRunner-ref"/>
-            <property name="auxiliary;index" value="17"/>
+            <property name="auxiliary;index" value="38"/>
             <property name="dataSource-ref to JDBC DataSource" value="DAX_Data_Source"/>
             <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
-                <property name="value" value="UPDATE dbo.userinfo SET enable=0 WHERE networkAlias = #[payload['user_name']]"/>
+                <property name="value" value="UPDATE dbo.userinfo SET enable=0 WHERE networkAlias = #[flowVars.serviceNowUserName]"/>
                 <property name="key" value="inactivate_dax_Emp"/>
-                <property name="auxiliary;index" value="18"/>
-                <property name="auxiliary;wrapIn" value="18"/>
+                <property name="auxiliary;index" value="39"/>
+                <property name="auxiliary;wrapIn" value="39"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#2">
+        <properties>
+            <property name="handleOutputResultSets"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="AUDIT_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="AUDIT_DB_Connector"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="40"/>
+            <property name="dataSource-ref to JDBC DataSource" value="AUDIT_Data_Source"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                <property name="value" value="INSERT INTO dbo.UserDeactivation(EmployeeID, CreatedBy, ModifiedDate, ModifiedBy, Status) values (#[flowVars.serviceNowUserName], 'mule-app', getdate(), 'mule-app', 'User is Successfully De activated')"/>
+                <property name="key" value="audit_dax_Emp"/>
+                <property name="auxiliary;index" value="41"/>
+                <property name="auxiliary;wrapIn" value="41"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#3">
+        <properties>
+            <property name="handleOutputResultSets"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="DAX_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="DAX_DB_Connector_Is_Dax_User"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="42"/>
+            <property name="dataSource-ref to JDBC DataSource" value="DAX_Data_Source"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                <property name="value" value="select count(1) count from dbo.userinfo where networkAlias = #[flowVars.serviceNowUserName]"/>
+                <property name="key" value="is_dax_user"/>
+                <property name="auxiliary;index" value="43"/>
+                <property name="auxiliary;wrapIn" value="43"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#4">
+        <properties>
+            <property name="handleOutputResultSets"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="AUDIT_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="AUDIT_DB_Not_A_Dax_User"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="44"/>
+            <property name="dataSource-ref to JDBC DataSource" value="AUDIT_Data_Source"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                <property name="value" value="INSERT INTO dbo.UserDeactivation(EmployeeID, CreatedBy, ModifiedDate, ModifiedBy, Status) values (#[flowVars.serviceNowUserName], 'mule-app', getdate(), 'mule-app', 'User Does Not exist in DAX – No Action Taken')"/>
+                <property name="key" value="log_not_a_dax_user"/>
+                <property name="auxiliary;index" value="45"/>
+                <property name="auxiliary;wrapIn" value="45"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#5">
+        <properties>
+            <property name="handleOutputResultSets"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="DAX_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="DAX_DB_Connector_Get_Status"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="46"/>
+            <property name="dataSource-ref to JDBC DataSource" value="DAX_Data_Source"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                <property name="value" value="SELECT enable from dbo.userinfo where networkAlias = #[flowVars.serviceNowUserName]"/>
+                <property name="key" value="get_status"/>
+                <property name="auxiliary;index" value="47"/>
+                <property name="auxiliary;wrapIn" value="47"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#6">
+        <properties>
+            <property name="handleOutputResultSets"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="AUDIT_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="AUDIT_DB_User_Already_Deactivated"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="48"/>
+            <property name="dataSource-ref to JDBC DataSource" value="AUDIT_Data_Source"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                <property name="value" value="INSERT INTO dbo.UserDeactivation(EmployeeID, CreatedBy, ModifiedDate, ModifiedBy, Status) values (#[flowVars.serviceNowUserName], 'mule-app', getdate(), 'mule-app', 'User already in Deactivated status in DAX - No Action taken')"/>
+                <property name="key" value="user_already_deactivated"/>
+                <property name="auxiliary;index" value="49"/>
+                <property name="auxiliary;wrapIn" value="49"/>
             </property-collection>
         </properties>
     </global-element>
