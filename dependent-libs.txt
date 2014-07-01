@@ -1,0 +1,46 @@
+dependent libraries
+ Directory of C:\dev\workspaces\mulepilot\blackhawk\libs
+
+02/19/2014  12:17 PM    <DIR>          .
+02/19/2014  12:17 PM    <DIR>          ..
+05/24/2013  01:13 PM             4,467 aopalliance-1.0.jar
+05/03/2012  05:45 PM            43,581 asm-3.3.1.jar
+05/24/2013  01:13 PM           575,389 commons-collections-3.2.1.jar
+02/12/2014  10:55 AM           160,519 commons-dbcp-1.4.jar
+05/24/2013  01:13 PM            39,123 commons-dbutils-1.2.jar
+08/14/2013  10:38 AM            60,686 commons-logging-1.1.1.jar
+05/24/2013  01:13 PM            96,203 commons-pool-1.5.3.jar
+02/12/2014  10:55 AM           365,075 cxf-api-2.5.9.jar
+02/12/2014  10:55 AM           361,100 cxf-common-utilities-2.5.9.jar
+02/12/2014  10:55 AM           177,857 cxf-rt-bindings-soap-2.5.9.jar
+02/12/2014  10:55 AM            37,654 cxf-rt-bindings-xml-2.5.9.jar
+02/12/2014  10:55 AM           577,708 cxf-rt-core-2.5.9.jar
+04/12/2013  07:01 PM           237,797 cxf-rt-databinding-aegis-2.5.9.jar
+04/12/2013  07:01 PM           109,926 cxf-rt-databinding-jaxb-2.5.9.jar
+04/12/2013  07:01 PM            45,418 cxf-rt-databinding-jibx-2.5.9.jar
+02/12/2014  10:55 AM           359,681 cxf-rt-frontend-jaxws-2.5.9.jar
+02/12/2014  10:55 AM           103,594 cxf-rt-frontend-simple-2.5.9.jar
+04/12/2013  07:01 PM            66,654 cxf-rt-management-2.5.9.jar
+02/12/2014  10:55 AM            18,711 cxf-rt-transports-common-2.5.9.jar
+02/12/2014  10:55 AM           224,108 cxf-rt-transports-http-2.5.9.jar
+04/12/2013  07:01 PM            24,518 cxf-rt-transports-local-2.5.9.jar
+02/12/2014  10:55 AM            88,724 cxf-rt-ws-addr-2.5.9.jar
+04/12/2013  07:01 PM           322,249 cxf-rt-ws-rm-2.5.9.jar
+04/12/2013  07:01 PM           604,592 cxf-rt-ws-security-2.5.9.jar
+02/12/2014  10:55 AM           162,247 cxf-tools-common-2.5.9.jar
+04/12/2013  07:01 PM            20,147 cxf-wstx-msv-validation-2.5.9.jar
+10/19/2011  10:29 AM            22,836 ftplet-api-1.0.2.jar
+02/19/2014  12:15 PM           275,253 ftpserver-core-1.0.4.jar
+02/12/2014  10:55 AM           223,298 geronimo-javamail_1.4_spec-1.7.1.jar
+02/12/2014  10:55 AM         6,167,362 groovy-all-1.8.6.jar
+10/05/2012  02:50 PM           424,648 httpclient-4.2.jar
+10/05/2012  02:50 PM           223,282 httpcore-4.2.jar
+10/04/2012  11:50 AM            92,140 jaxb-api-2.1-osgi.jar
+10/04/2012  11:50 AM           869,285 jaxb-impl-2.1.9-osgi.jar
+10/04/2012  11:52 AM         1,567,543 jaxb-xjc-2.1.9-osgi.jar
+08/14/2013  10:38 AM           152,797 jdom.jar
+04/12/2013  07:01 PM            52,026 jibx-extras-1.2.4.5.jar
+04/12/2013  07:01 PM           139,836 jibx-run-1.2.4.5.jar
+04/12/2013  07:01 PM           279,592 jibx-schema-1.2.4.5.jar
+02/12/2014  10:55 AM           305,038 jtds-1.2.4.jar
+05/24/2013  01:13 PM           248,994 junit-4.9.jar

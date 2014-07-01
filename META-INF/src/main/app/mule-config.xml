@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
+	xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz"
+	xmlns:https="http://www.mulesoft.org/schema/mule/https"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <!--
+    Default, development properties. Use the ${mule.env}-config.properties below
+    to set environmentally specific properties.
+    -->
+    <context:property-placeholder location="classpath:config.properties" order="2"/>
+    <!--
+    	This file should exist on the server's classpath (e.g.: MULE_HOME/conf).
+    	You can add it in src/main/resources if you wish to override something in
+    	your local environment but do not check it into the project.
+   	-->
+    <context:property-placeholder location="classpath:${mule.env}-config.properties"
+                                  order="1" ignore-unresolvable="true" ignore-resource-not-found="true"/>
+
+
+	<quartz:connector name="QuartzConnector" doc:name="Quartz">
+		<quartz:factory-property key="org.quartz.scheduler.instanceName" value="MuleScheduler2" />
+		<quartz:factory-property key="org.quartz.threadPool.class" value="org.quartz.simpl.SimpleThreadPool" />
+		<quartz:factory-property key="org.quartz.threadPool.threadCount" value="3" />
+		<quartz:factory-property key="org.quartz.scheduler.rmi.proxy" value="false" />
+		<quartz:factory-property key="org.quartz.scheduler.rmi.export" value="false" />
+		<quartz:factory-property key="org.quartz.jobStore.class" value="org.quartz.simpl.RAMJobStore" />
+	</quartz:connector>
+
+	<https:connector name="HttpsConnector" validateConnections="true" sendBufferSize="0" receiveBufferSize="0"
+		receiveBacklog="0" clientSoTimeout="10000" serverSoTimeout="10000" socketSoLinger="0" doc:name="HTTP\HTTPS" />
+
+    <spring:beans>
+        <spring:bean id="DAX_Data_Source" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <spring:property name="url" value="${dax.database.url}"/>
+            <spring:property name="username" value="${dax.database.user}"/>
+            <spring:property name="password" value="${dax.database.password}"/>
+            <spring:property name="driverClassName" value="${dax.database.driver}"/>
+            <spring:property name="initialSize" value="5"/>
+            <spring:property name="testOnBorrow" value="true"/>
+            <spring:property name="validationQuery" value="${jdbc.validationQuery}"/>
+            <spring:property name="maxWait" value="60000"/>
+            <spring:property name="maxActive" value="50"/>
+            <spring:property name="removeAbandoned" value="true"/>
+            <spring:property name="removeAbandonedTimeout" value="300"/>
+            <spring:property name="logAbandoned" value="true"/>
+        </spring:bean>
+        <spring:bean id="AUDIT_Data_Source" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <spring:property name="url" value="${audit.database.url}"/>
+            <spring:property name="username" value="${audit.database.user}"/>
+            <spring:property name="password" value="${audit.database.password}"/>
+            <spring:property name="driverClassName" value="${audit.database.driver}"/>
+            <spring:property name="initialSize" value="5"/>
+            <spring:property name="testOnBorrow" value="true"/>
+            <spring:property name="validationQuery" value="${jdbc.validationQuery}"/>
+            <spring:property name="maxWait" value="60000"/>
+            <spring:property name="maxActive" value="50"/>
+            <spring:property name="removeAbandoned" value="true"/>
+            <spring:property name="removeAbandonedTimeout" value="300"/>
+            <spring:property name="logAbandoned" value="true"/>
+        </spring:bean>        
+	</spring:beans>
+
+	<jdbc-ee:connector name="DAX_DB_Connector" dataSource-ref="DAX_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
+	    <jdbc-ee:query key="inactivate_dax_Emp" value="UPDATE dbo.userinfo SET enable=0 WHERE networkAlias = #[flowVars.serviceNowUserName]"/>
+    </jdbc-ee:connector>
+    
+	<jdbc-ee:connector name="AUDIT_DB_Connector" dataSource-ref="AUDIT_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
+	    <jdbc-ee:query key="audit_dax_Emp" value="INSERT INTO dbo.UserDeactivation(EmployeeID, CreatedBy, ModifiedDate, ModifiedBy, Status) values (#[flowVars.serviceNowUserName], 'mule-app', getdate(), 'mule-app', 'User is Successfully De activated')"/>
+    </jdbc-ee:connector>
+    <jdbc-ee:connector name="DAX_DB_Connector_Is_Dax_User" dataSource-ref="DAX_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
+        <jdbc-ee:query key="is_dax_user" value="select count(1) count from dbo.userinfo where networkAlias = #[flowVars.serviceNowUserName]"/>
+    </jdbc-ee:connector>
+    <jdbc-ee:connector name="AUDIT_DB_Not_A_Dax_User" dataSource-ref="AUDIT_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
+        <jdbc-ee:query key="log_not_a_dax_user" value="INSERT INTO dbo.UserDeactivation(EmployeeID, CreatedBy, ModifiedDate, ModifiedBy, Status) values (#[flowVars.serviceNowUserName], 'mule-app', getdate(), 'mule-app', 'User Does Not exist in DAX &#8211; No Action Taken')"/>
+    </jdbc-ee:connector>
+    <jdbc-ee:connector name="DAX_DB_Connector_Get_Status" dataSource-ref="DAX_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
+        <jdbc-ee:query key="get_status" value="SELECT enable from dbo.userinfo where networkAlias = #[flowVars.serviceNowUserName]"/>
+    </jdbc-ee:connector>
+    <jdbc-ee:connector name="AUDIT_DB_User_Already_Deactivated" dataSource-ref="AUDIT_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
+        <jdbc-ee:query key="user_already_deactivated" value="INSERT INTO dbo.UserDeactivation(EmployeeID, CreatedBy, ModifiedDate, ModifiedBy, Status) values (#[flowVars.serviceNowUserName], 'mule-app', getdate(), 'mule-app', 'User already in Deactivated status in DAX - No Action taken')"/>
+    </jdbc-ee:connector>    
+</mule>
